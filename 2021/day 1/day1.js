@@ -1999,19 +1999,45 @@ const input = [
     '8704',
     '8711',
     '8710',
+];
+
+const inputTest = [
+    '199',
+    '200',
+    '208',
+    '210',
+    '200',
+    '207',
+    '240',
+    '269',
+    '260',
+    '263',
 ]
 
-const { count } = input.reduce((acc, current)=>{
-    if( current > acc.prev) {
-        acc.count++;
-    }
+const getCountOfIncreasingValues = arr => {
+    const { count } = arr.reduce((acc, current, index)=>{
+        if( index > 0 && current > acc.prev) {
+            acc.count++;
+        }
 
-    acc.prev = current
+        acc.prev = current
 
-    return acc;
-},{
-    prev: 0,
-    count: 0,
-});
+        return acc;
+    },{
+        prev: 0,
+        count: 0,
+    });
 
-console.log(count);
+    return count;
+}
+
+console.log(getCountOfIncreasingValues(input));
+
+const getSumOfThree = (arr, index) => {
+    return arr.slice(index, index + 3).reduce((total, cur) => total + parseInt(cur, 10), 0);
+}
+
+const inputSumOfThree = input.map((_, index)=> getSumOfThree(input, index));
+
+
+console.log(getCountOfIncreasingValues(inputSumOfThree));
