@@ -2039,5 +2039,4 @@ const getSumOfThree = (arr, index) => {
 
 const inputSumOfThree = input.map((_, index)=> getSumOfThree(input, index));
 
-
 console.log(getCountOfIncreasingValues(inputSumOfThree));
