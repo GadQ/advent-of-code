@@ -1,7 +1,7 @@
 import { readFileSync } from "fs";
 import path from "path";
 
-const input = readFileSync(path.join("inputTest.txt"), "utf-8")
+const input = readFileSync(path.join("input.txt"), "utf-8")
     .split(/\r?\n/)
     .filter((line) => line)
     .map((line) => parseInt(line));
@@ -37,17 +37,46 @@ console.log(sorted);
 
 const indexesToRemove = [];
 
-for( let i = 1; i < sorted.length - 2; i++ ){
-    if( sorted[i+1] - sorted[i-1] <= 3) {
+for( let i = 1; i < sorted.length - 2; i++ ) {
+    if (sorted[i + 1] - sorted[i - 1] <= 3) {
         indexesToRemove.push(i);
     }
 }
+
+    console.log({indexesCount: indexesToRemove.length});
 
 function arrCombinations(array) {
     return new Array(1 << array.length).fill().map(
         (e1, i) => array.filter((e2, j) => i & 1 << j));
 }
 
+function isCombinationValid(array) {
+    return array.every((item, index) => {
+        return index === 0 || item - array[index - 1] <= 3;
+    })
+}
+
 const combinations = arrCombinations(indexesToRemove);
 
-console.log(combinations);
+
+
+let validCount = 0;
+
+
+combinations.forEach((combination,index) => {
+    const arr = sorted.filter((item, index2) => !combination.includes(index2));
+
+
+    if( isCombinationValid(arr)) {
+        validCount++;
+    }
+
+    if( index < 6 ) {
+        console.log(arr);
+    }
+});
+
+console.log(combinations.length);
+console.log(validCount);
+
+
