@@ -52,7 +52,7 @@ const getWinningBoardAndNumber = () => {
         for( let j =0 ; j < boards.length; j++ ) {
             const isWin = boards[j].checkIfBoardWon(numbersAnnounced.slice(0, i));
             if( isWin ) {
-                return isWin.lastField * isWin.unmarkedFields.reduce((acc, cur) => acc + cur)
+                return isWin.lastField * isWin.unmarkedFields.reduce((acc, cur) => acc + cur);
             }
         }
     }
@@ -62,20 +62,18 @@ const getWinningBoardAndNumber = () => {
 console.log(`First star: ${getWinningBoardAndNumber()}`);
 
 
-let lastNumber = null;
-let unmarkedFields = null
+let result = null;
 
 while(boards.length) {
     for( let i =0; i < numbersAnnounced.length; i++ ) {
         boards.forEach((board, index)=>{
             const isWin = boards[index].checkIfBoardWon(numbersAnnounced.slice(0, i));
             if( isWin ) {
-                lastNumber = isWin.lastField;
-                unmarkedFields = isWin.unmarkedFields;
+                result = isWin.lastField * isWin.unmarkedFields.reduce((acc, cur) => acc + cur);
                 boards.splice(index, 1);
             }
         })
     }
 }
 
-console.log(`Second star: ${lastNumber * unmarkedFields.reduce((acc, cur) => acc + cur)}`);
+console.log(`Second star: ${result}`);
