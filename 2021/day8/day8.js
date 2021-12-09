@@ -1,6 +1,6 @@
 const { readFileSync } = require("fs");
 const path = require('path');
-const input = readFileSync(path.join(__dirname, "inputTest.txt"), "utf-8")
+const input = readFileSync(path.join(__dirname, "input.txt"), "utf-8")
     .split('\n').filter(Boolean).map(line => line.split(' | '));
 
 
@@ -43,12 +43,12 @@ const getSegments = line => {
     const map = Object.fromEntries('abcdefg'.split('').map(letter => [letter, null]));
 
     const digits = line[0].split(' ');
+    const resultDigits = line[1].split(' ');
     const one = digits.filter( ({length}) => length === 2).join('');
     const seven = digits.filter( ({length}) => length === 3).join('');
     const four = digits.filter( ({length}) => length === 4).join('');
     const eight = digits.filter( ({length}) => length === 7).join('');
 
-    console.log( {one, four, seven, eight});
     const lineLetters = digits.flatMap(part => part.split('')).reduce((acc, cur)=>{
         acc[cur] = (acc[cur] || 0) + 1
         return acc;
@@ -57,16 +57,29 @@ const getSegments = line => {
     const segmentAC = Object.entries(lineLetters).filter(([_, count])=>count === 8).map(([letter]) => letter).join('');
     const [segmentB] = Object.entries(lineLetters).filter(([_, count])=>count === 6).map(([letter]) => letter);
     const [segmentC] = getUniqueSegments(segmentAC, segmentA);
+    const segmentDG = Object.entries(lineLetters).filter(([_, count])=>count === 7).map(([letter]) => letter);
+    const [segmentD] = segmentDG.filter(letter => four.split('').includes(letter));
     const [segmentE] = Object.entries(lineLetters).filter(([_, count])=>count === 4).map(([letter]) => letter);
-    const [segmentG] = Object.entries(lineLetters).filter(([_, count])=>count === 7).map(([letter]) => letter);
+    const [segmentG] = getUniqueSegments(segmentDG.join(''), segmentD);
+    const [segmentF] = getUniqueSegments(one, segmentC);
     
-    map.a = segmentA;
-    map.b = segmentB;
-    map.c = segmentC;
-    map.e = segmentE;
-    map.g = segmentG;
+    map[segmentA] = 'a';
+    map[segmentB] = 'b';
+    map[segmentC] = 'c';
+    map[segmentD] = 'd';
+    map[segmentE] = 'e';
+    map[segmentF] = 'f';
+    map[segmentG] = 'g';
 
-    console.log(segmentC, map);
+    return resultDigits
+            .map(digit => digitsMap[digit.split('')
+                .map(digitLetter => map[digitLetter])
+                .sort()
+                .join('')]
+            )
+            .join('');
 }
 
-console.log(getSegments(inputSorted[0]));
+const numbers = inputSorted.map(line => parseInt(getSegments(line), 10)).reduce((a,b)=> a + b);
+
+console.log(`Second star: ${numbers}`);
