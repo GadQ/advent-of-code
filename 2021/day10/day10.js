@@ -41,3 +41,34 @@ const mappedInput = input.map(findCorruptedCharacter)
 const corruptedCharacters = mappedInput.filter(Boolean).reduce((acc, char) => acc + charValues[char], 0);
 
 console.log('First star: ' + corruptedCharacters);
+
+const incompleteLines = input.filter(line => !findCorruptedCharacter(line));
+
+const findIncompleteSequence = text => {
+    const textClosedSections = text.replace(/({})|(\[])|(\(\))|(<>)/g, '');
+    return text !== textClosedSections ? findIncompleteSequence(textClosedSections) : textClosedSections;
+}
+
+const mapTextToValue = text => {
+    const closingCharValues = {
+        ')': 1,
+        ']': 2,
+        '}': 3,
+        '>': 4,
+    }
+    const closingChars = text
+        .split('')
+        .reverse()
+        .map(char => closingCharValues[closingCharsMap[char]])
+        .reduce((acc, cur)=> {
+            return acc * 5 + cur
+        } , 0);
+
+    return closingChars;
+}
+
+const incompleteLinesValues = incompleteLines.map( line => {
+    return mapTextToValue(findIncompleteSequence(line.join('')));
+}).sort((a,b)=>a-b)
+
+console.log('Second star: ' + incompleteLinesValues[Math.floor(incompleteLinesValues.length / 2)]);
