@@ -25,8 +25,7 @@ const increaseEnergyAll = arr => {
 
 const displayArray = arr => {
     arr.forEach(line => {
-        console.log(line.join('')
-        );
+        console.log(line.join(''));
     });
 }
 
